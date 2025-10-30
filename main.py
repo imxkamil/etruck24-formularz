@@ -6,6 +6,7 @@ from pydantic import BaseModel
 from sqlalchemy.orm import Session
 from db import SessionLocal, engine
 from models import Base, Lead
+from twilio.rest import Client
 
 # 🔸 Inicjalizacja bazy danych
 Base.metadata.create_all(bind=engine)
@@ -69,8 +70,41 @@ async def submit_form(data: FormData, db: Session = Depends(get_db)):
 
     return {"message": "✅ Dziękujemy! Zgłoszenie zostało zapisane."}
 
+    # 📲 WhatsApp powiadomienie
+    try:
+        account_sid = "ACd1a54d3c7490ca7c956dedf7b347e593"
+        auth_token = "3a2432c59b80765239d8773d762ffffc"
+        client = Client(account_sid, auth_token)
+
+        message = client.messages.create(
+            from_="whatsapp:+14155238886",   # numer WhatsApp Twilio
+            to="whatsapp:+48517431258",      # Twój numer
+            # body=f"🚛 Nowe zgłoszenie od {data.name}\nTel: {data.phone}\nNIP: {data.nip}\nDMC: {data.dmc}"
+                body=(
+                    "🚛 *Nowe zgłoszenie z formularza*\n\n"
+                    f"👤 Imię i nazwisko: {data.name}\n"
+                    f"🏢 NIP: {data.nip}\n"
+                    f"📞 Telefon: {data.phone}\n"
+                    f"⚖️ DMC: {data.dmc}\n"
+                    f"📏 Wymiary: {data.wymiary}\n"
+                    f"🔼 Winda: {data.winda}\n"
+                    f"📅 Data startu: {data.start_date}\n"
+                    f"🌍 Kody startu: {data.kody_startu}\n"
+                    f"🚚 Typ zabudowy: {data.zabudowa}\n\n"
+                    "──────────────────────\n"
+                    "💡 Truck24 – nowe zgłoszenie"
+                )
+        )
+
+        print(f"✅ WhatsApp wysłany: {message.sid}")
+    except Exception as e:
+        print("❌ Błąd przy wysyłce WhatsApp:", e)
+
+    # return {"message": "✅ Zgłoszenie zapisane i wysłane na WhatsApp."}
+
 # 🧾 Podgląd wszystkich zgłoszeń (np. do panelu lub eksportu)
 @app.get("/leads")
 def get_all_leads(db: Session = Depends(get_db)):
     leads = db.query(Lead).all()
     return leads
+
