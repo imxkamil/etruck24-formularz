@@ -68,12 +68,12 @@ async def submit_form(data: FormData, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(lead)
 
-    return {"message": "✅ Dziękujemy! Zgłoszenie zostało zapisane."}
+    # return {"message": "✅ Dziękujemy! Zgłoszenie zostało zapisane."}
 
     # 📲 WhatsApp powiadomienie
     try:
         account_sid = "ACd1a54d3c7490ca7c956dedf7b347e593"
-        auth_token = "3a2432c59b80765239d8773d762ffffc"
+        auth_token = "2b0dc350de029bd197acc424ff39e149"
         client = Client(account_sid, auth_token)
 
         message = client.messages.create(
@@ -101,10 +101,10 @@ async def submit_form(data: FormData, db: Session = Depends(get_db)):
         print("❌ Błąd przy wysyłce WhatsApp:", e)
 
     # return {"message": "✅ Zgłoszenie zapisane i wysłane na WhatsApp."}
+    return {"message": "✅ Dziękujemy! Zgłoszenie zostało zapisane."}
 
 # 🧾 Podgląd wszystkich zgłoszeń (np. do panelu lub eksportu)
 @app.get("/leads")
 def get_all_leads(db: Session = Depends(get_db)):
     leads = db.query(Lead).all()
     return leads
-
