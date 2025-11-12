@@ -72,8 +72,8 @@ async def submit_form(data: FormData, db: Session = Depends(get_db)):
 
     # 📲 WhatsApp powiadomienie
     try:
-        account_sid = "ACd1a54d3c7490ca7c956dedf7b347e593"
-        auth_token = "2b0dc350de029bd197acc424ff39e149"
+        account_sid = "ACb78c17a1340623406d47e6e9486dd4c1" # ACb78c17a1340623406d47e6e9486dd4c1(nowy) ACd1a54d3c7490ca7c956dedf7b347e593(stary)
+        auth_token = "3781978ab91d3a37493d49d172409158" # nowy - 3781978ab91d3a37493d49d172409158
         client = Client(account_sid, auth_token)
 
         message = client.messages.create(
@@ -108,5 +108,6 @@ async def submit_form(data: FormData, db: Session = Depends(get_db)):
 def get_all_leads(db: Session = Depends(get_db)):
     leads = db.query(Lead).all()
     return leads
+
 
 
