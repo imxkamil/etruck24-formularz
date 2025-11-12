@@ -78,7 +78,7 @@ async def submit_form(data: FormData, db: Session = Depends(get_db)):
 
         message = client.messages.create(
             from_="whatsapp:+14155238886",   # numer WhatsApp Twilio
-            to="whatsapp:+48517431258",      # Twój numer
+            to="whatsapp:+48693609800",      # Twój numer
             # body=f"🚛 Nowe zgłoszenie od {data.name}\nTel: {data.phone}\nNIP: {data.nip}\nDMC: {data.dmc}"
                 body=(
                     "🚛 *Nowe zgłoszenie z formularza*\n\n"
@@ -108,3 +108,4 @@ async def submit_form(data: FormData, db: Session = Depends(get_db)):
 def get_all_leads(db: Session = Depends(get_db)):
     leads = db.query(Lead).all()
     return leads
+
